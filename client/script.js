@@ -14,12 +14,18 @@ socket.emit('newPlayer');
 
 //Draw a player rectangle at x,y
 function drawPlayer(player) {
-
   ctx.beginPath();
+  if (player.jumping) {
+    // Change the appearance of the player when jumping
+    ctx.fillStyle = "red"; // Example: change color
+  } else {
+    ctx.fillStyle = "black";
+  }
   ctx.rect(player.x, player.y, 50, 50);
+  ctx.fill();
   ctx.stroke();
-
 }
+
 
 //listen to the server and draw the players
 var gamesate = null;
@@ -34,3 +40,5 @@ socket.on('state', (gameState) => {
     drawPlayer(gameState.players[player])
   }
 })
+
+socket.emit('canvasSize', { width: canvas.width, height: canvas.height });

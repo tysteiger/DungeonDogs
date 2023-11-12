@@ -3,43 +3,68 @@ var canvas = document.getElementById("game")
 
 //Object that stores the current pressed keys
 const playerMovement = {
-    up: false,
-    down: false,
-    left: false,
-    right: false
-  };
+  up: false,
+  down: false,
+  left: false,
+  right: false,
+  jump: false
+};
 
 //Function that runs whenever a key is pressed, and updates the object
-  const keyDownHandler = (e) => {
-    if (e.keyCode == 39 || e.keyCode == 68) {
-        playerMovement.right = true;
-      } else if (e.keyCode == 37 || e.keyCode == 65) {
-        playerMovement.left = true;
-      } else if (e.keyCode == 38 || e.keyCode == 87) {
-        playerMovement.up = true;
-      } else if (e.keyCode == 40 || e.keyCode == 83) {
-
-        playerMovement.down = true;
-      }
-  };
+const keyDownHandler = (e) => {
+  switch (e.keyCode) {
+    case 39: // Right arrow
+    case 68: // 'D'
+      playerMovement.right = true;
+      break;
+    case 37: // Left arrow
+    case 65: // 'A'
+      playerMovement.left = true;
+      break;
+    case 38: // Up arrow
+    case 87: // 'W'
+      playerMovement.up = true;
+      break;
+    case 40: // Down arrow
+    case 83: // 'S'
+      playerMovement.down = true;
+      break;
+    case 32: // Spacebar for jump
+      playerMovement.jump = true;
+      break;
+  }
+};
 //Function that runs when a key is released, and updates the object
-  const keyUpHandler = (e) => {
-    if (e.keyCode == 39 || e.keyCode == 68) {
+// Key Up Handler
+const keyUpHandler = (e) => {
+  switch (e.keyCode) {
+    case 39: // Right arrow
+    case 68: // 'D'
       playerMovement.right = false;
-    } else if (e.keyCode == 37 || e.keyCode == 65) {
+      break;
+    case 37: // Left arrow
+    case 65: // 'A'
       playerMovement.left = false;
-    } else if (e.keyCode == 38 || e.keyCode == 87) {
+      break;
+    case 38: // Up arrow
+    case 87: // 'W'
       playerMovement.up = false;
-    } else if (e.keyCode == 40 || e.keyCode == 83) {
+      break;
+    case 40: // Down arrow
+    case 83: // 'S'
       playerMovement.down = false;
-    }
-  };
+      break;
+    case 32: // Spacebar for jump
+      playerMovement.jump = false;
+      break;
+  }
+};
 
 //Make the functions run whenever the events happen
-  document.addEventListener('keydown', keyDownHandler, false);
-  document.addEventListener('keyup', keyUpHandler, false);
+document.addEventListener('keydown', keyDownHandler, false);
+document.addEventListener('keyup', keyUpHandler, false);
 
 //Send the movement to server 60 times / second
 setInterval(() => {
-    socket.emit('playerMovement', playerMovement);
+  socket.emit('playerMovement', playerMovement);
 }, 1000 / 60);
