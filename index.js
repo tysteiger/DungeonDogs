@@ -27,6 +27,8 @@ io.on('connection', (socket) => {
   socket.on('playerMovement', (playerMovement) => {
     //Someone Moved!
     const player = gameState.players[socket.id]
+    player.movement = playerMovement;
+
     //These are boundaries
     const canvasWidth = 1200
     const canvasHeight = 700
@@ -61,6 +63,7 @@ io.on('connection', (socket) => {
 
   socket.on('canvasSize', (size) => {
     gameState.players[socket.id].canvasHeight = size.height;
+    gameState.players[socket.id].canvasWidth = size.width;
   });
 })
 
@@ -69,6 +72,15 @@ io.on('connection', (socket) => {
 setInterval(() => {
   for (let id in gameState.players) {
     let player = gameState.players[id];
+    const movement = player.movement || {}; // Get the stored movement state
+
+    // Horizontal movement
+    if (movement.left && player.x > 0) {
+      player.x -= 4;
+    }
+    if (movement.right && player.x < player.canvasWidth) {
+      player.x += 4;
+    }
 
     // Jumping
     if (player.jumping) {
